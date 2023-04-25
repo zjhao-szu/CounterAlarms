@@ -29,10 +29,13 @@ namespace gr {
     class crcAppend_impl : public crcAppend
     {
      private:
-      // Nothing to declare in this block.
-
+      bool m_has_crc;
+      std::vector<uint8_t> m_payload; 
+      uint8_t m_payload_len;
+      int m_frame_len;
+      unsigned int Caculate_crc16(std::vector<uint8_t> DAT, unsigned int length);
      public:
-      crcAppend_impl();
+      crcAppend_impl(bool has_crc);
       ~crcAppend_impl();
 
       // Where all the action really happens

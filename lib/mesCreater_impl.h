@@ -22,7 +22,8 @@
 #define INCLUDED_COUNTERCLOCKWISEALARMS_MESCREATER_IMPL_H
 
 #include <CounterClockwiseAlarms/mesCreater.h>
-
+#include <string>
+#include <iostream>
 namespace gr {
   namespace CounterClockwiseAlarms {
 
@@ -30,9 +31,12 @@ namespace gr {
     {
      private:
       // Nothing to declare in this block.
-
+      uint8_t m_sf;
+      uint8_t m_mesDownId;
+      uint8_t m_framelen;
+      std::ofstream m_outFile;
      public:
-      mesCreater_impl();
+      mesCreater_impl(uint8_t mesDownId,uint8_t sf,uint8_t framelen);
       ~mesCreater_impl();
 
       // Where all the action really happens

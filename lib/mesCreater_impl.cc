@@ -29,27 +29,38 @@ namespace gr {
   namespace CounterClockwiseAlarms {
 
     mesCreater::sptr
-    mesCreater::make()
+    mesCreater::make(uint8_t mesDownId,uint8_t sf,uint8_t framelen)
     {
       return gnuradio::get_initial_sptr
-        (new mesCreater_impl());
+        (new mesCreater_impl(mesDownId,sf,framelen));
     }
 
 
     /*
      * The private constructor
      */
-    mesCreater_impl::mesCreater_impl()
+    mesCreater_impl::mesCreater_impl(uint8_t mesDownId,uint8_t sf,uint8_t framelen)
       : gr::block("mesCreater",
-              gr::io_signature::make(<+MIN_IN+>, <+MAX_IN+>, sizeof(<+ITYPE+>)),
-              gr::io_signature::make(<+MIN_OUT+>, <+MAX_OUT+>, sizeof(<+OTYPE+>)))
-    {}
+              gr::io_signature::make(0, 0, 0),
+              gr::io_signature::make(1, 1, sizeof(uint8_t)))
+    {
+      m_mesDownId = mesDownId;
+      m_sf = sf;
+      m_framelen =  framelen;
+      if( m_mesDownId < 0 && m_mesDownId >= ( 1 << sf ) ){
+        std::cout<<RED<<"MES ID is out of range: "<<m_mesDownId<<" sf: "<<m_sf<<std::endl;
+        exit(0);
+      }
+      m_outFile.open("msgCreaterRecord.txt",std::ios::out | std::ios::trunc);
+      m_outFile<<"Id\tpayloadStr"<<std::endl;
+    }
 
     /*
      * Our virtual destructor.
      */
     mesCreater_impl::~mesCreater_impl()
     {
+      m_outFile.close();
     }
 
     void
@@ -64,13 +75,27 @@ namespace gr {
                        gr_vector_const_void_star &input_items,
                        gr_vector_void_star &output_items)
     {
-      const <+ITYPE+> *in = (const <+ITYPE+> *) input_items[0];
-      <+OTYPE+> *out = (<+OTYPE+> *) output_items[0];
+      const uint8_t *in = (const uint8_t *) input_items[0];
+      uint8_t *out = (uint8_t *) output_items[0];
+      noutput_items = 0;
+      if(!m_sendMes){
+        return noutput_items;
+      }
 
-      // Do <+signal processing+>
-      // Tell runtime system how many input items we consumed on
-      // each input stream.
-      consume_each (noutput_items);
+
+      pmt_t frame_len = pmt::from_long(framelen); //通过几个标点符号决定信标长度，一般由一个chirp决定
+      std::string payload_str;
+      payload_str.push(m_mesDownId);
+      m_outFile<<m_mesDownId<<"\t"<<(char)m_mesDownId<<std::endl;
+      add_item_tag(0,nitems_written(0),pmt::string_to_symbol("frame_len"),frame_len);
+      add_item_tag(0,nitems_written(0),pmt::string_to_symbol("payload_str"),pmt::string_to_symbol(payload_str));
+
+      //Id为32位数据，将32位数字转换为4个8进制数组进行传输
+      out[0] = m_mesDownId;
+      
+      noutput_items = frame_len;
+
+      consume_each (0);
 
       // Tell runtime system how many output items we produced.
       return noutput_items;

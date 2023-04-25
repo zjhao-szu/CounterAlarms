@@ -45,7 +45,7 @@ namespace gr {
        * class. CounterClockwiseAlarms::mesCreater::make is the public interface for
        * creating new instances.
        */
-      static sptr make();
+      static sptr make(uint8_t mesDownId,uint8_t sf,uint8_t framelen);
     };
 
   } // namespace CounterClockwiseAlarms

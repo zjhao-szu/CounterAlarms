@@ -45,7 +45,7 @@ namespace gr {
        * class. CounterClockwiseAlarms::DownModulate::make is the public interface for
        * creating new instances.
        */
-      static sptr make();
+      static sptr make(uint8_t sf, uint32_t samp_rate, uint32_t bw, std::vector<uint16_t> sync_words);
     };
 
   } // namespace CounterClockwiseAlarms

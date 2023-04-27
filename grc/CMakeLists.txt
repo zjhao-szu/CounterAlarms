@@ -21,5 +21,7 @@
 install(FILES
     CounterClockwiseAlarms_mesCreater.block.yml
     CounterClockwiseAlarms_crcAppend.block.yml
-    CounterClockwiseAlarms_DownModulate.block.yml DESTINATION share/gnuradio/grc/blocks
+    CounterClockwiseAlarms_DownModulate.block.yml
+    CounterClockwiseAlarms_ReceiveDown.block.yml
+    CounterClockwiseAlarms_Crc_verif.block.yml DESTINATION share/gnuradio/grc/blocks
 )

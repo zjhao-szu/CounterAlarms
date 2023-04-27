@@ -25,5 +25,7 @@ install(FILES
     api.h
     mesCreater.h
     crcAppend.h
-    DownModulate.h DESTINATION include/CounterClockwiseAlarms
+    DownModulate.h
+    ReceiveDown.h
+    Crc_verif.h DESTINATION include/CounterClockwiseAlarms
 )

@@ -27,5 +27,6 @@ install(FILES
     crcAppend.h
     DownModulate.h
     ReceiveDown.h
-    Crc_verif.h DESTINATION include/CounterClockwiseAlarms
+    Crc_verif.h
+    FrameSync.h DESTINATION include/CounterClockwiseAlarms
 )

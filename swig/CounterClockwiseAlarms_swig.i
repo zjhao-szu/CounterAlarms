@@ -13,6 +13,7 @@
 #include "CounterClockwiseAlarms/DownModulate.h"
 #include "CounterClockwiseAlarms/ReceiveDown.h"
 #include "CounterClockwiseAlarms/Crc_verif.h"
+#include "CounterClockwiseAlarms/FrameSync.h"
 %}
 
 %include "CounterClockwiseAlarms/mesCreater.h"
@@ -25,3 +26,5 @@ GR_SWIG_BLOCK_MAGIC2(CounterClockwiseAlarms, DownModulate);
 GR_SWIG_BLOCK_MAGIC2(CounterClockwiseAlarms, ReceiveDown);
 %include "CounterClockwiseAlarms/Crc_verif.h"
 GR_SWIG_BLOCK_MAGIC2(CounterClockwiseAlarms, Crc_verif);
+%include "CounterClockwiseAlarms/FrameSync.h"
+GR_SWIG_BLOCK_MAGIC2(CounterClockwiseAlarms, FrameSync);

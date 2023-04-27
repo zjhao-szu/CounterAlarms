@@ -29,6 +29,7 @@ list(APPEND CounterClockwiseAlarms_sources
     DownModulate_impl.cc
     ReceiveDown_impl.cc
     Crc_verif_impl.cc
+    FrameSync_impl.cc
 )
 
 set(CounterClockwiseAlarms_sources "${CounterClockwiseAlarms_sources}" PARENT_SCOPE)

@@ -45,7 +45,7 @@ namespace gr {
        * class. CounterClockwiseAlarms::Crc_verif::make is the public interface for
        * creating new instances.
        */
-      static sptr make();
+      static sptr make(double frequency,uint8_t sf);
     };
 
   } // namespace CounterClockwiseAlarms

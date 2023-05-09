@@ -45,7 +45,7 @@ namespace gr {
        * class. CounterClockwiseAlarms::ReceiveDown::make is the public interface for
        * creating new instances.
        */
-      static sptr make();
+      static sptr make(uint8_t sf, bool impl_head);
     };
 
   } // namespace CounterClockwiseAlarms

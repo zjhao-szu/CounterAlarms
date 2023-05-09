@@ -45,7 +45,7 @@ namespace gr {
        * class. CounterClockwiseAlarms::FrameSync::make is the public interface for
        * creating new instances.
        */
-      static sptr make(n);
+      static sptr make(float samp_rate, uint32_t bandwidth, uint8_t sf, bool impl_head, std::vector<uint16_t> sync_word);
     };
 
   } // namespace CounterClockwiseAlarms

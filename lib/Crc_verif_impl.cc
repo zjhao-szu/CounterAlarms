@@ -29,21 +29,26 @@ namespace gr {
   namespace CounterClockwiseAlarms {
 
     Crc_verif::sptr
-    Crc_verif::make()
+    Crc_verif::make(double frequency,uint8_t sf)
     {
       return gnuradio::get_initial_sptr
-        (new Crc_verif_impl());
+        (new Crc_verif_impl(frequency,sf));
     }
 
 
     /*
      * The private constructor
      */
-    Crc_verif_impl::Crc_verif_impl()
+    Crc_verif_impl::Crc_verif_impl(double frequency,uint8_t sf)
       : gr::block("Crc_verif",
-              gr::io_signature::make(<+MIN_IN+>, <+MAX_IN+>, sizeof(<+ITYPE+>)),
-              gr::io_signature::make(<+MIN_OUT+>, <+MAX_OUT+>, sizeof(<+OTYPE+>)))
-    {}
+              gr::io_signature::make(1, 1, sizeof(uint32_t)),
+              gr::io_signature::make(0, 1, sizeof(uint8_t))),
+        m_frequency(frequency),
+        m_sf(sf)
+    {
+        m_payload_len = 1 + m_crc_presence * 4;
+         message_port_register_out(pmt::mp("msg"));
+    }
 
     /*
      * Our virtual destructor.
@@ -56,6 +61,28 @@ namespace gr {
     Crc_verif_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
     {
       /* <+forecast+> e.g. ninput_items_required[0] = noutput_items */
+      ninput_items_required[0] = 1; //m_payload_len;
+    }
+
+    unsigned int Calculate_crc16(std::vector<uint8_t> DAT, unsigned int length);
+    {
+        unsigned int CRC = 0xffff;
+        unsigned char i;
+        unsigned char j;
+        for (i = 0; i < length; i++)
+        {
+            CRC = CRC ^ DAT[i];
+            for(j = 0; j < 8;j++){
+                if(CRC & 0x01){
+                    CRC = CRC >> 1;
+                    CRC = CRC ^ 0xA001;
+                }else{
+                    CRC = CRC >> 1;
+                }
+                
+            }
+        }
+        return CRC;
     }
 
     int
@@ -64,16 +91,31 @@ namespace gr {
                        gr_vector_const_void_star &input_items,
                        gr_vector_void_star &output_items)
     {
-      const <+ITYPE+> *in = (const <+ITYPE+> *) input_items[0];
-      <+OTYPE+> *out = (<+OTYPE+> *) output_items[0];
-
-      // Do <+signal processing+>
+      const uint32_t *in = (const uint32_t *) input_items[0];
+      uint8_t *out = (uint8_t *) output_items[0];
+      if(ninput_items[0] >= (int)m_payload_len){
+        for(int i = 0;i < m_payload_len;i++){
+          in_buff.push_back(in[i]);
+        }
+        int crcResult = Calculate_crc16(in_buff,m_payload_len);
+        if(crcResult == 0){
+          std::cout<<"CRC valid"<<std::endl;
+        }else{
+          std::cout<<"CRC Invalid"<<std::endl;
+        }
+        out[0] = in[0];
+        message_port_pub(pmt::intern("msg"), pmt::from_uint64(in[0]));
+         consume_each (m_payload_len);
+        return 1;
+      }else{
+        return 0;
+      }
+      
+      
+      
       // Tell runtime system how many input items we consumed on
       // each input stream.
-      consume_each (noutput_items);
-
-      // Tell runtime system how many output items we produced.
-      return noutput_items;
+     
     }
 
   } /* namespace CounterClockwiseAlarms */

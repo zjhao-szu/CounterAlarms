@@ -45,7 +45,7 @@ namespace gr {
        * class. CounterClockwiseAlarms::crcAppend::make is the public interface for
        * creating new instances.
        */
-      static sptr make();
+      static sptr make(bool has_crc);
     };
 
   } // namespace CounterClockwiseAlarms

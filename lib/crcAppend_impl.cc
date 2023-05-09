@@ -139,7 +139,7 @@ namespace gr {
           //calculate CRC on the data bytes using Poly=1021 Init=0000
           Calculate_crc16(m_payload,m_payload_len);
           unsigned char first = (value >> 8) & 0xff;
-	      unsigned char second = value & 0xff; 
+	        unsigned char second = value & 0xff; 
           //Place the CRC in the correct output nibble
           out[nitems_to_process] = second;
           out[nitems_to_process+1] = first;
